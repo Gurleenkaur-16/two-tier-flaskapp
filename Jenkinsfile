@@ -5,7 +5,7 @@ pipeline{
             steps{
                 echo "This is cloning the code"
                 git url:"https://github.com/Gurleenkaur-16/two-tier-flaskapp.git" ,branch : "main"
-                echo "code cloned "
+                echo "code cloned successfully"
             }
         }
         stage("Code Build"){
