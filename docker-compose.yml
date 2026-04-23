@@ -1,9 +1,8 @@
-version: '3'
 services:
-  
   backend:
     build:
       context: .
+    container_name: flaskapp
     ports:
       - "5000:5000"
     environment:
@@ -11,11 +10,15 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
       MYSQL_DB: myDb
+    networks:
+      - twotier
     depends_on:
       - mysql
+    restart: always
 
   mysql:
-    image: mysql:latest
+    image: mysql:5.7
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:
@@ -23,9 +26,15 @@ services:
       MYSQL_DATABASE: myDb
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
+    networks:
+      - twotier
     volumes:
-      - ./message.sql:/docker-entrypoint-initdb.d/message.sql   # Mount sql script into container's /docker-entrypoint-initdb.d directory to get table automatically created
-      - mysql-data:/var/lib/mysql  # Mount the volume for MySQL data storage
+      - mysql_data:/var/lib/mysql
+      - ./message.sql:/docker-entrypoint-initdb.d/message.sql
+    restart: always
+
+networks:
+  twotier:
 
 volumes:
-  mysql-data:
+  mysql_data:
